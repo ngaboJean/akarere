@@ -1,0 +1,30 @@
+# Node.js
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# dotenv
+.env
+backend/.env
+frontend/.env
+
+# build outputs
+frontend/build/
+backend/dist/
+
+# logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# uploads and runtime storage
+uploads/
+
+# Visual Studio Code
+.vscode/
