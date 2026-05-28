@@ -365,6 +365,30 @@ const idParamValidator = [
     .toInt(),
 ];
 
+// ── USSD VALIDATOR ─────────────────────────────────────────
+const ussdValidator = [
+  body('sessionId')
+    .trim()
+    .notEmpty().withMessage('Session ID irakenewe.'),
+
+  body('phoneNumber')
+    .trim()
+    .notEmpty().withMessage('Nimero ya telefoni irakenewe.')
+    .custom((val) => {
+      const cleaned = val.replace(/[\s\-]/g, '');
+      if (!rwandaPhonePattern.test(cleaned)) {
+        throw new Error('Nimero ya telefoni y\'u Rwanda ntiyemezwa.');
+      }
+      return true;
+    }),
+
+  body('text')
+    .optional({ nullable: true, checkFalsy: true })
+    .trim()
+    .isString().withMessage('Ibyanditse mu USSD bigomba kuba umwandiko.')
+    .customSanitizer(sanitizeText),
+];
+
 module.exports = {
   // Auth
   registerValidator,
