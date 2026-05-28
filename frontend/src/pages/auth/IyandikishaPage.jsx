@@ -82,6 +82,7 @@ export default function IyandikishaPage() {
   });
 
   const indangamuntu   = watch('indangamuntu', '');
+  const amazinaValue   = watch('amazina', '');
   const ijambo_banga   = watch('ijambo_banga', '');
   const selectedAkarere  = watch('akarere_id');
   const selectedUmurenge = watch('umurenge_id');
@@ -134,6 +135,7 @@ export default function IyandikishaPage() {
     } else if (indangamuntu.length > 0 && indangamuntu.length < 16) {
       setNidaStatus(null);
       setNidaData(null);
+      setValue('amazina', '', { shouldValidate: true });
     }
   }, [indangamuntu]);
 
@@ -146,16 +148,20 @@ export default function IyandikishaPage() {
       if (res.data.success) {
         setNidaStatus('valid');
         setNidaData(res.data.data);
-        // Auto-fill amazina avuye kuri NIDA
-        if (res.data.data?.amazina) {
+        // Auto-fill amazina avuye kuri NIDA only if user hasn't typed one.
+        if (res.data.data?.amazina && !amazinaValue) {
           setValue('amazina', res.data.data.amazina, { shouldValidate: true });
         }
       } else {
         setNidaStatus('invalid');
+        setNidaData(null);
+        setValue('amazina', '', { shouldValidate: true });
         setError('indangamuntu', { message: res.data.message });
       }
     } catch (err) {
       setNidaStatus('invalid');
+      setNidaData(null);
+      setValue('amazina', '', { shouldValidate: true });
       const msg = err.response?.data?.message || 'Ikibazo mu kugenzura indangamuntu.';
       setError('indangamuntu', { message: msg });
     }
@@ -209,8 +215,8 @@ export default function IyandikishaPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rwanda-dark via-blue-900 to-rwanda-green py-8 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-rwanda-dark via-blue-900 to-rwanda-green py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto px-2 sm:px-0">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-xl mb-3">
@@ -220,10 +226,10 @@ export default function IyandikishaPage() {
           <p className="text-blue-200 text-sm mt-1">Fungura Konti ya System y'Ibanze 🇷🇼</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className="bg-white rounded-[2rem] shadow-2xl p-5 sm:p-7 lg:p-10">
           <ApiErrorAlert error={apiError} onDismiss={() => setApiError('')} />
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 mt-4" noValidate>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-4" noValidate>
 
             {/* ── NIDA Section ── */}
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
@@ -238,7 +244,6 @@ export default function IyandikishaPage() {
                 type="text"
                 register={register}
                 error={errors.indangamuntu?.message}
-                value={indangamuntu}
                 required
                 placeholder="Imibare 16 y'indangamuntu"
                 maxLength={16}
@@ -268,24 +273,24 @@ export default function IyandikishaPage() {
               type="text"
               register={register}
               error={errors.amazina?.message}
-              value={watch('amazina', '')}
               required
               placeholder="Amazina avuye kuri NIDA"
+              autoComplete="name"
               hint="Amazina azuzurwa mu buryo bwikora nyuma yo kugenzura indangamuntu"
             />
 
             {/* ── Telefoni & Email ── */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField
                 label="Telefoni"
                 name="telephone"
                 type="tel"
                 register={register}
                 error={errors.telephone?.message}
-                value={watch('telephone', '')}
                 required
                 placeholder="07XXXXXXXX"
                 inputMode="tel"
+                autoComplete="tel"
                 hint="Urugero: 0781234567"
               />
               <FormField
@@ -294,7 +299,6 @@ export default function IyandikishaPage() {
                 type="email"
                 register={register}
                 error={errors.email?.message}
-                value={watch('email', '')}
                 placeholder="example@email.com"
                 autoComplete="email"
               />
@@ -305,7 +309,7 @@ export default function IyandikishaPage() {
               <h3 className="font-semibold text-gray-700 text-sm flex items-center gap-2">
                 📍 Aho Utuye — Bisabwa
               </h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   label="Akarere"
                   name="akarere_id"

@@ -72,6 +72,7 @@ export default function FormField({
           placeholder={placeholder}
           disabled={disabled}
           className={`${baseClass} resize-none`}
+          defaultValue={value || undefined}
           {...(register ? register(name) : {})}
           {...rest}
         />
@@ -84,6 +85,7 @@ export default function FormField({
           id={name}
           disabled={disabled}
           className={`${baseClass} bg-white cursor-pointer`}
+          defaultValue={value || undefined}
           {...(register ? register(name) : {})}
           {...rest}
         >
@@ -106,6 +108,7 @@ export default function FormField({
         placeholder={placeholder}
         disabled={disabled}
         className={baseClass}
+        defaultValue={value || undefined}
         {...(register ? register(name) : {})}
         {...rest}
       />

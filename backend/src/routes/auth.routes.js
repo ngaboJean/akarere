@@ -112,6 +112,8 @@ router.post('/iyandikisha', registerValidator, validate, async (req, res) => {
     const hashedPassword = await bcrypt.hash(ijambo_banga, saltRounds);
 
     // 6. Kubika mu database
+    const userAmazina = amazina?.trim() || nidaResult.data?.amazina;
+
     const [result] = await db.execute(
       `INSERT INTO abakoresha
         (indangamuntu, telephone, amazina, ijambo_banga, email,
@@ -121,7 +123,7 @@ router.post('/iyandikisha', registerValidator, validate, async (req, res) => {
       [
         indangamuntu,
         normalizedTel,
-        nidaResult.data?.amazina || amazina,
+        userAmazina,
         hashedPassword,
         email ? email.toLowerCase() : null,
         loc.id,
@@ -150,7 +152,7 @@ router.post('/iyandikisha', registerValidator, validate, async (req, res) => {
       message: 'Konti yawe yashyizweho neza. Murakaza neza!',
       data: {
         id:            result.insertId,
-        amazina:       nidaResult.data?.amazina || amazina,
+        amazina:       userAmazina,
         nida_verified: true,
         aho_atuye: {
           umudugudu: loc.umudugudu_izina,
